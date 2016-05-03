@@ -1,4 +1,4 @@
-;;; imessage.el --- Control iMessage with helm
+;;; iMessage.el --- Control iMessage with helm
 ;; Copyright 2016 Chad Sahlhoff
 ;;
 ;; Author: Chad Sahlhoff <chad@sahlhoff.com>
@@ -62,8 +62,13 @@
                      (get-service-buddy
                       (s-trim candidate)))))))
 
-(helm :sources '(helm-source-message))
+;;;###autoload
+(defun imessage ()
+  "Bring up helm buddy search"
+  (interactive)
+  (helm :sources '(helm-source-message)
+  :buffer "*imessage*"))
 
-(provide 'iMessage)
-;;; imessage.el ends here
+(provide 'imessage)
+;;; iMessage.el ends here
 
