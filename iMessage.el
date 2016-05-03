@@ -4,7 +4,7 @@
 ;; Author: Chad Sahlhoff <chad@sahlhoff.com>
 ;; Maintainer: Chad Sahlhoff <chad@sahlhoff.com>
 ;; Keywords: helm iMessage
-;; URL: https://github.com/sahlhoff/emacs-imessage
+;; URL: https://github.com/sahlhoff/imessage
 ;; Created: 1st May 2016
 ;; Version: 0.1.0
 ;; Package-Requires: (helm "0.0.0")
@@ -64,6 +64,6 @@
 
 (helm :sources '(helm-source-message))
 
-(provide 'imessage)
+(provide 'iMessage)
 ;;; imessage.el ends here
 
