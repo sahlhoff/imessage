@@ -1,0 +1,8 @@
+* iMessage for emacs
+
+A simple emacs interface for iMessage.
+
+Requires helm.
+
+
+

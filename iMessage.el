@@ -1,3 +1,22 @@
+;;; imessage.el --- Control iMessage with helm
+;; Copyright 2016 Chad Sahlhoff
+;;
+;; Author: Chad Sahlhoff <chad@sahlhoff.com>
+;; Maintainer: Chad Sahlhoff <chad@sahlhoff.com>
+;; Keywords: helm iMessage
+;; URL: https://github.com/sahlhoff/emacs-imessage
+;; Created: 1st May 2016
+;; Version: 0.1.0
+;; Package-Requires: (helm "0.0.0")
+
+;;; Commentary:
+;;
+;; An iMessage interface for osx
+;;
+;; Only supports osx and imessage
+;;
+
+;;; Code:
 
 (defun get-buddies-names ()
   "apple script to get buddy names"
@@ -35,7 +54,7 @@
   (s-trim-left (s-trim-right s)))
 
 (setq helm-source-message
-      '((name . "iMessage")
+      '((name . "imessage")
         (candidates . get-buddies-names)
         (action . (lambda (candidate)
                     (send-buddy-message
@@ -43,8 +62,8 @@
                      (get-service-buddy
                       (s-trim candidate)))))))
 
-      (helm :sources '(helm-source-message))
+(helm :sources '(helm-source-message))
 
-
-
+(provide 'imessage)
+;;; imessage.el ends here
 
