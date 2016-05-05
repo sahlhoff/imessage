@@ -14,3 +14,9 @@ Requires helm and s.
 #+BEGIN_EXAMPLE
 M-x imessage
 #+END_EXAMPLE
+
+There's cases where passing in the service ID will cause issues trying to send an SMS.  The service ID is also only useful if there's more than one iCloud account set up on the Mac this is running on.  So, by default, fetching the service is disabled.  To enable it, you just have to set the variable to non-t:
+
+#+BEGIN_EXAMPLE
+(setq imessage-disable-service-check nil)
+#+END_EXAMPLE
