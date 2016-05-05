@@ -1,4 +1,4 @@
-;;; iMessage.el --- Control iMessage with helm
+;; iMessage.el --- Control iMessage with helm
 ;; Copyright 2016 Chad Sahlhoff
 ;;
 ;; Author: Chad Sahlhoff <chad@sahlhoff.com>
@@ -18,31 +18,37 @@
 
 ;;; Code:
 
+(defvar imessage-disable-service-check t "Sometimes a message won't send if the service is passed in, disable this if you run into issues.")
+
+(defun imessage-call-osascript (cmd)
+  "Simple wrapper around the whole OSAscript call that gets made almost everywhere."
+  (setq result "")
+  (setq imessage-cmd (format "osascript -e 'tell application \"Messages\" %s'" cmd))
+  (message "OSAScript cmd: %s" imessage-cmd)
+  (setq result (shell-command-to-string imessage-cmd))
+  (message result))
+
 (defun imessage-get-buddies-names ()
   "apple script to get buddy names"
-  (imessage-parse-blob
-   (shell-command-to-string (format "osascript -e 'tell application %S to get name of buddies'"
-                                    "Messages"))))
+  (imessage-parse-blob (imessage-call-osascript "to get name of buddies")))
+
 (defun imessage-get-service-buddy (buddy)
   "apples script to get the service of the buddy"
-  (message
-   (replace-regexp-in-string "\n\\'" "" 
-                             (shell-command-to-string (format "osascript -e 'tell application %S to get name of service of buddy %S'"
-                                                              "Messages"
-                                                              buddy)))))
+  (unless imessage-disable-service-check
+    (replace-regexp-in-string "\n\\'" "" (imessage-call-osascript (format "to get name of service of buddy %S" buddy)))))
 
-(defun imessage-send-buddy-message (buddy service)
+(defun imessage-send-buddy-message (buddy)
   "send message to the buddy and their service"
-  (shell-command-to-string (format "osascript -e 'tell application %S to send %S to buddy %S of service %S'"
-                                   "Messages"
-                                   (call-interactively 'imessage-get-message)
-                                   buddy
-                                   service)))
+  (let (service (imessage-get-service-buddy buddy))
+    (setq imessage-cmd (format "to send %s to buddy %S" (call-interactively 'imessage-get-message) buddy))
+    (if service
+	(setq imessage-cmd (format " of service %S" service)))
+    (imessage-call-osascript imessage-cmd)))
 
 (defun imessage-get-message (msg)
   "Prompt user for the message"
   (interactive "MMessage to send: ")
-  (message "%s" msg))
+  (format "%S" msg))
 
 
 (defun imessage-parse-blob (blob)
@@ -58,9 +64,7 @@
         (candidates . imessage-get-buddies-names)
         (action . (lambda (candidate)
                     (imessage-send-buddy-message
-                     (imessage-s-trim candidate)
-                     (imessage-get-service-buddy
-                      (imessage-s-trim candidate)))))))
+                      (imessage-s-trim candidate))))))
 
 ;;;###autoload
 (defun imessage ()
