@@ -2,10 +2,15 @@
 
 A simple emacs interface for iMessage.
 
-Requires helm.
+Requires helm and s.
 
 * Installation 
+
 - Add imessage.el to your load path
 - (require 'imessage)
 
+* Usage
 
+#+BEGIN_EXAMPLE
+M-x imessage
+#+END_EXAMPLE

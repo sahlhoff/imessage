@@ -7,7 +7,7 @@
 ;; URL: https://github.com/sahlhoff/imessage
 ;; Created: 1st May 2016
 ;; Version: 0.1.0
-;; Package-Requires: (helm "0.0.0")
+;; Package-Requires: ((helm "0.0.0") (s "1.0.0"))
 
 ;;; Commentary:
 ;;
@@ -18,12 +18,12 @@
 
 ;;; Code:
 
-(defun get-buddies-names ()
+(defun imessage-get-buddies-names ()
   "apple script to get buddy names"
-  (parse-blob
+  (imessage-parse-blob
    (shell-command-to-string (format "osascript -e 'tell application %S to get name of buddies'"
                                     "Messages"))))
-(defun get-service-buddy (buddy)
+(defun imessage-get-service-buddy (buddy)
   "apples script to get the service of the buddy"
   (message
    (replace-regexp-in-string "\n\\'" "" 
@@ -31,36 +31,36 @@
                                                               "Messages"
                                                               buddy)))))
 
-(defun send-buddy-message (buddy service)
+(defun imessage-send-buddy-message (buddy service)
   "send message to the buddy and their service"
   (shell-command-to-string (format "osascript -e 'tell application %S to send %S to buddy %S of service %S'"
                                    "Messages"
-                                   (call-interactively 'get-message)
+                                   (call-interactively 'imessage-get-message)
                                    buddy
                                    service)))
 
-(defun get-message (msg)
+(defun imessage-get-message (msg)
   "Prompt user for the message"
   (interactive "MMessage to send: ")
   (message "%s" msg))
 
 
-(defun parse-blob (blob)
+(defun imessage-parse-blob (blob)
   "Split the buddies returning list"
   (split-string blob ","))
 
-(defun s-trim (s)
+(defun imessage-s-trim (s)
   "Remove whitespace at the beginning and end of S."
   (s-trim-left (s-trim-right s)))
 
 (setq helm-source-message
       '((name . "imessage")
-        (candidates . get-buddies-names)
+        (candidates . imessage-get-buddies-names)
         (action . (lambda (candidate)
-                    (send-buddy-message
-                     (s-trim candidate)
-                     (get-service-buddy
-                      (s-trim candidate)))))))
+                    (imessage-send-buddy-message
+                     (imessage-s-trim candidate)
+                     (imessage-get-service-buddy
+                      (imessage-s-trim candidate)))))))
 
 ;;;###autoload
 (defun imessage ()
